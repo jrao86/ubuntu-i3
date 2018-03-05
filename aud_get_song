@@ -1,0 +1,15 @@
+#!/bin/bash
+if pgrep mocp >> /dev/null
+then
+	if [ $(mocp -Q %state) = STOP ]
+	then
+		echo ''
+	else
+		titulo=$(mocp -Q %song)
+		pos=$(mocp -Q %ct)
+		dur=$(mocp -Q %tt)
+		echo $titulo $pos/$dur
+	fi
+else
+	echo ''
+fi
