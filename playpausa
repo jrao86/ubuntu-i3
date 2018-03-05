@@ -1,0 +1,12 @@
+#!/bin/bash
+if pgrep mocp >> /dev/null
+then
+	if [ $(mocp -Q %state) = STOP ]
+	then
+		mocp -p
+	else
+		mocp -G
+	fi
+else
+	lxterminal --geometry=100x30 --command=mocp &
+fi
