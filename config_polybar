@@ -1,0 +1,203 @@
+;=====================================================
+;
+;   To learn more about how to configure Polybar
+;   go to https://github.com/jaagr/polybar
+;
+;   The README contains alot of information
+;
+;=====================================================
+
+[colors]
+background = #75222222
+background-alt = #444
+foreground = #dfdfdf
+foreground-alt = #55
+primary = #ffb52a
+secondary = #e60053
+alert = #bd2c40
+
+
+[bar/example]
+
+# Tamaño y diseño de la barra
+width = 100%
+height = 25
+offset-x = 0
+offset-y = 0
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+;overline-size = 2
+;overline-color = #f00
+;underline-size = 2
+;underline-color = #00f
+
+border-bottom-size = 4
+border-bottom-color=#00fff
+border-top-size=4
+border-top-color = #00fff
+
+padding-left = 0
+padding-right = 0
+module-margin-left = 0
+module-margin-right = 0
+
+# Fuentes
+font-0 = "Inconsolata:pixelsize=14:weight=bold;1"
+font-1="FontAwesome:pixelsize=12;0"
+font-2 = "OxygenMono:pixelsize=12;1"
+
+# Módulos cargados
+modules-left = i3 xwindow
+modules-center = fecha memory cpu espaciolibre
+modules-right = mocplayer songpos audprev playpause audnext
+
+# Tray
+
+tray-position = right
+;tray-padding = 2
+;tray-transparent = true
+;tray-background = #0063ff
+
+# Otras configuraciones
+scroll-up=xdotool key XF86AudioRaiseVolume
+scroll-down=xdotool key XF86AudioLowerVolume
+
+
+####### Módulos ########
+[module/i3]
+type = internal/i3
+format = <label-state> <label-mode>
+index-sort = true
+wrapping-scroll = false
+
+label-mode-padding = 2
+label-mode-foreground = #000
+label-mode-background = ${colors.primary}
+
+label-focused = %index%
+label-focused-background = ${colors.background-alt}
+label-focused-padding = 1
+
+label-unfocused = %index%
+label-unfocused-padding = 1
+
+label-urgent = %index%!
+label-urgent-background = ${colors.alert}
+label-urgent-padding = 1
+
+label-visible = %index%
+label-visible-background = ${colors.background-alt}
+label-visible-padding = 1
+
+
+[module/xwindow]
+type = internal/xwindow
+label = %title:0:30:...%
+label-background = #95222222
+label-padding=1
+
+[module/fecha]
+type=custom/script
+exec = date "+%a %d de %b %I:%M"
+interval = 10
+label = | %output%|
+content-background=#000
+content-foreground=#fff
+click-left=/home/jrao/Scripts/Bash/calendario &
+
+[module/memory]
+type = internal/memory
+interval = 10
+label =  %percentage_used%%|
+
+[module/cpu]
+type = internal/cpu
+interval = 10
+label =  %percentage%%|
+
+[module/espaciolibre]
+type=custom/script
+exec = df -h | grep '/dev/sda5' | awk '{print $4}'
+tail = true
+interval = 60
+label =  %output%|
+content-background=#000
+content-foreground=#fff
+
+[module/mocplayer]
+type = custom/text
+content = 
+content-background = #90999999
+content-foreground = #ffffff
+content-padding = 1
+click-left = lxterminal --geometry=100x30 --command=mocp &
+
+[module/songpos]
+type = custom/script
+exec = /home/jrao/Scripts/Bash/aud_get_song 
+tail = false
+interval=1
+format = <label>
+label-font = 3
+format-background = #90999999
+format-foreground = #ffffff
+format-padding = 1
+label=%output:0:50%
+click-left=/home/jrao/Scripts/Bash/playpausa &
+scroll-up=mocp -k +10
+scroll-down=mocp -k -10
+
+[module/audprev]
+type = custom/text
+content = 
+content-background = #90999999
+content-foreground = #ffffff
+content-padding = 1
+click-left = mocp -r &
+
+[module/playpause]
+type = custom/text
+content = 
+content-background = #90999999
+content-foreground = #ffffff
+content-padding = 1
+click-left = sh /home/jrao/Scripts/Bash/playpausa &
+
+[module/audnext]
+type = custom/text
+content =  
+content-background = #90999999
+content-foreground = #ffffff
+content-padding = 1
+click-left = mocp -f &
+
+[module/powermenu]
+type = custom/menu
+
+format-spacing = 1
+
+label-open =  power
+label-open-foreground = ${colors.secondary}
+label-close =  cancel
+label-close-foreground = ${colors.secondary}
+label-separator = |
+label-separator-foreground = ${colors.foreground-alt}
+
+menu-0-0 = reboot
+menu-0-0-exec = menu-open-1
+menu-0-1 = power off
+menu-0-1-exec = menu-open-2
+
+menu-1-0 = cancel
+menu-1-0-exec = menu-open-0
+menu-1-1 = reboot
+menu-1-1-exec = sudo reboot
+
+menu-2-0 = power off
+menu-2-0-exec = sudo poweroff
+menu-2-1 = cancel
+menu-2-1-exec = menu-open-0
+
+; vim:ft=dosini
